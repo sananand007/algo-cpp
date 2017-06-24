@@ -16,15 +16,18 @@ void mergesort(int array[], int p1, int r1);
 void print_array(int arr[],int l);
 
 int main(int argc, char *argv[]) {
-    int array[8];
-    cout<<"Enter 8 numbers:"<<endl;
-    for (int i = 0; i < 8; ++i) {
+    int val;
+    cout<<"Enter a number of elements to be inside the array to be sorted"<<endl;
+    cin>>val;
+    int array[val];
+    cout<<"Enter "<<val<<" numbers:"<<endl;
+    for (int i = 0; i < val; ++i) {
         cin>>array[i];
     }
     cout<<endl;
 
     cout<<"Originally entered array is:"<<endl;
-    for (int j = 0; j < 8; ++j) {
+    for (int j = 0; j < val; ++j) {
         cout<<array[j];
         cout<<endl;
     }
@@ -33,18 +36,23 @@ int main(int argc, char *argv[]) {
     cout<<"The length of the array is:"<<endl;
     cout<<l<<endl;
 
-
-    cout<<"Insertion Sort : "<<endl;
-    insertionsort(array, l);
-
-    cout<<"Insertion Sort Increasing : "<<endl;
-    insertionsort_noninc(array,l);
-
-
-    cout<<"Merge Sort : "<<endl;
-    mergesort(array, 0, l-1);
-    for (int k = 0; k < l; ++k) {
-        cout<<array[k]<<endl;
+    //Based on you Choice of Sorting
+    char choice;
+    cout<<"Enter the choice you want to make a->Insertion Sort, b->insertionsort_noninc, c->MergeSort"<<endl;
+    cin>>choice;
+    switch (choice){
+        case 'a':
+            cout<<"Insertion Sort : "<<endl;
+            insertionsort(array, l);
+        case 'b':
+            cout<<"Insertion Sort Increasing : "<<endl;
+            insertionsort_noninc(array,l);
+        default://optional
+            cout<<"Merge Sort : "<<endl;
+            mergesort(array, 0, l-1);
+            for (int k = 0; k < l; ++k) {
+                cout<<array[k]<<endl;
+            }
     }
 }
 
