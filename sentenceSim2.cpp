@@ -3,13 +3,17 @@
 #include <algorithm>
 #include <vector>
 #include <map>
+#include <numeric>
 
 using namespace std;
 
 
-// Start using a map for maintaining a dctionary to try DFS 
-// Use a disjoint set if you need to use UnionFind 
+// Start using a map for maintaining a dctionary to try DFS - this solves it, but recurssive dfs is slower
+// Use a disjoint set if you need to use UnionFind -- This will be faster
+
+
 class Solution {
+    // This Solution is just similarity and not testing transitive nature
     public:
         bool areSentencesSimilar(vector<string>& words1, vector<string>& words2, vector<vector<string>>& pairs) {
             vector<int> res;
@@ -46,6 +50,7 @@ class Solution {
 };
 
 class Solution2 {
+    // This Solution is for checking the transitive nature as well
     public:
         void print(vector<string>const &input)
         {
@@ -147,10 +152,67 @@ class Solution2 {
         }
 };
 
+class UnionFind{
+    public:
+        UnionFind(int n) {
+            parents = vector<int>(n);
+            iota(parents.begin(), parents.end(), 0);
+        }
+        
+        int find(int x) {
+            while (x != parents[x])
+            {
+                parents[x] = parents[parents[x]];
+                x = parents[x];
+            }
+            return x;
+        }
+
+        void union_(int x, int y)
+        {
+            if (find(x) != find(y))
+                parents[find(x)] = find(y);
+        }
+    private:
+        vector<int> parents;
+};
+
+class Solution3{
+    // This Solution is for solving with Using the Union Find Algorithm
+    public:
+        bool areSentencesSimilar(vector<string>& words1, vector<string>& words2, vector<vector<string>>& pairs) {
+            if (words1.size() != words2.size())
+                return false;
+            map<string, int> mp;
+            for (vector<string>& p : pairs)
+            {
+                if (mp.find(p[0]) == mp.end())
+                    mp[p[0]] = mp.size();
+
+                if (mp.find(p[1]) == mp.end())
+                    mp[p[1]] = mp.size();
+            }
+            
+            UnionFind uf(mp.size());
+            for (vector<string>& p : pairs)
+            {
+                int x = mp[p[0]], y = mp[p[1]];
+                uf.union_(x, y);
+            }
+
+            for (int i = 0; i < words1.size(); i++)
+            {
+                if (words1[i] != words2[i] && (mp.find(words1[i]) == mp.end() || mp.find(words2[i]) == mp.end() || uf.find(mp[words1[i]] != uf.find(mp[words2[i]])) ))
+                    return false;
+            }
+
+            return true;
+        }
+};
 
 int main()
 {
-    Solution2 obj;
+    Solution3 obj;
     
     /*
     vector<string> words1 = {"this","summer","thomas","get","really","very","rich","and","have","any","actually","wonderful","and","good","truck","every","morning","he","drives","an","extraordinary","truck","around","the","nice","city","to","eat","some","extremely","extraordinary","food","as","his","meal","but","he","only","entertain","an","few","well","fruits","as","single","lunch","he","wants","to","eat","single","single","and","really","healthy","life"};
